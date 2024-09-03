@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحقق من القسمة</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            direction: rtl; /* محاذاة النصوص لليمين */
+        }
+        h1 {
+            color: #343a40;
+            text-align: center;
+        }
+        .info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #d1e7dd;
+            border-radius: 8px;
+            border: 1px solid #badbcc;
+            color: #0f5132;
+            font-size: 1.1em;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 100%;
+            max-width: 250px;
+            text-align: right; /* محاذاة النصوص في الحقول */
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>تحقق من القسمة</h1>
+    
+    <div class="info">
+        <p>في الرياضيات، نقول إن العدد A يقبل القسمة على العدد B إذا كان هناك عدد صحيح C يجعل A = B × C. بمعنى آخر، عندما نقسم A على B، يجب أن يكون هناك باقي قسمة يساوي صفر.</p>
+        <p>في هذه الصفحة، يمكنك إدخال عددين للتحقق مما إذا كان الأول يقبل القسمة على الثاني. تأكد من عدم إدخال صفر كعدد ثاني لأن القسمة على صفر غير معرفة.</p>
+    </div>
+    
+    <label for="number1">أدخل العدد الأول:</label>
+    <input type="number" id="number1" step="any">
+    
+    <label for="number2">أدخل العدد الثاني:</label>
+    <input type="number" id="number2" step="any">
+    
+    <button onclick="checkDivisibility()">تحقق</button>
+    
+    <p class="result" id="result"></p>
+    
+    <script>
+        function checkDivisibility() {
+            // قراءة القيم من المدخلات
+            const number1 = parseFloat(document.getElementById('number1').value);
+            const number2 = parseFloat(document.getElementById('number2').value);
+
+            // التحقق من القسمة
+            let resultText = '';
+            if (isNaN(number1) || isNaN(number2)) {
+                resultText = 'يرجى إدخال أرقام صحيحة في كلا الحقلين.';
+            } else if (number2 === 0) {
+                resultText = 'العدد الثاني لا يمكن أن يكون صفرًا.';
+            } else if (number1 % number2 === 0) {
+                resultText = `${number1} يقبل القسمة على ${number2}.`;
+            } else {
+                resultText = `${number1} لا يقبل القسمة على ${number2}.`;
+            }
+
+            // عرض النتيجة
+            document.getElementById('result').innerText = resultText;
+        }
+    </script>
+</body>
+</html>
