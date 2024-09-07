@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>النتائج</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav {
+            margin: 10px 0;
+            text-align: center;
+        }
+        nav a {
+            color: #333;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        h2 {
+            color: #333;
+        }
+        .result {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .feedback {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>نتائج الاختبار</h1>
+    </header>
+    <nav>
+        <a href="index.html">الصفحة الرئيسية</a>
+        <a href="quiz.html">الاختبار</a>
+        <a href="results.html">النتائج</a>
+    </nav>
+    <div class="container">
+        <h2>تهانينا!</h2>
+        <p class="result">لقد حصلت على <span id="score">0</span> من 7.</p>
+        <p class="feedback" id="feedback"></p>
+    </div>
+
+    <script>
+        const correctAnswers = ['a', 'b', 'a', 'b', 'b', 'a', 'a'];  // الإجابات الصحيحة
+        let userAnswers = JSON.parse(localStorage.getItem('userAnswers')) || [];  // الإجابات المختارة من قبل المستخدم
+        let score = 0;
+
+        // حساب النتيجة
+        correctAnswers.forEach((answer, index) => {
+            if (userAnswers[index] === answer) {
+                score++;
+            }
+        });
+
+        // عرض النتيجة
+        document.getElementById('score').textContent = score;
+
+        // تقديم تغذية راجعة بناءً على النتيجة
+        const feedback = document.getElementById('feedback');
+        if (score >= 5) {
+            feedback.textContent = 'عمل رائع! لقد أتممت الاختبار بنجاح.';
+            feedback.classList.add('correct');
+        } else {
+            feedback.textContent = 'حاول مرة أخرى لتحسين نتيجتك. بإمكانك القيام بذلك!';
+            feedback.classList.add('incorrect');
+        }
+    </script>
+</body>
+</html>
+

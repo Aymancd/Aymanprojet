@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الاختبار</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav {
+            margin: 10px 0;
+            text-align: center;
+        }
+        nav a {
+            color: #333;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question h3 {
+            margin: 0;
+        }
+        .question input[type="radio"] {
+            margin-right: 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .timer {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        .controls {
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
+    <script>
+        let timer;
+        let timeLeft = 600; // 10 دقائق
+
+        function startTimer() {
+            timer = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('timer').textContent = `الوقت المتبقي: ${minutes} دقيقة و ${seconds} ثانية`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    submitQuiz(); // تقديم الاختبار عند انتهاء الوقت
+                } else {
+                    timeLeft--;
+                }
+            }, 1000);
+        }
+
+        function startQuiz() {
+            document.getElementById('start-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+            startTimer();
+        }
+
+        function saveAnswers() {
+            const userAnswers = [];
+            const questions = document.querySelectorAll('.question');
+
+            questions.forEach((question) => {
+                const selectedAnswer = question.querySelector('input[type="radio"]:checked');
+                if (selectedAnswer) {
+                    userAnswers.push(selectedAnswer.value);
+                } else {
+                    userAnswers.push(null); // إذا لم يتم اختيار إجابة
+                }
+            });
+
+            localStorage.setItem('userAnswers', JSON.stringify(userAnswers));
+        }
+
+        function showResults() {
+            saveAnswers();
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('results-section').style.display = 'block';
+            calculateScore();
+        }
+
+        function calculateScore() {
+            const correctAnswers = ['a', 'b', 'a', 'b', 'b', 'a', 'a'];  // الإجابات الصحيحة
+            const userAnswers = JSON.parse(localStorage.getItem('userAnswers')) || [];  // الإجابات المختارة من قبل المستخدم
+            let score = 0;
+
+            // حساب النتيجة
+            correctAnswers.forEach((answer, index) => {
+                if (userAnswers[index] === answer) {
+                    score++;
+                }
+            });
+
+            // عرض النتيجة
+            document.getElementById('score').textContent = `عدد الإجابات الصحيحة: ${score}`;
+
+            // تقديم تغذية راجعة بناءً على النتيجة
+            const feedback = document.getElementById('feedback');
+            if (score >= 5) {
+                feedback.textContent = 'عمل رائع! لقد أتممت الاختبار بنجاح.';
+                feedback.classList.add('correct');
+            } else {
+                feedback.textContent = 'حاول مرة أخرى لتحسين نتيجتك. بإمكانك القيام بذلك!';
+                feedback.classList.add('incorrect');
+            }
+        }
+
+        function submitQuiz() {
+            showResults(); // عرض النتائج مباشرة بعد تقديم الاختبار
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const quizForm = document.getElementById('quiz-form');
+            quizForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // منع الإرسال الافتراضي
+                submitQuiz(); // تقديم الاختبار وعرض النتائج
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>الاختبار</h1>
+    </header>
+    <nav>
+        <a href="#" onclick="document.getElementById('start-section').style.display='block'; document.getElementById('quiz-section').style.display='none'; document.getElementById('results-section').style.display='none';">الصفحة الرئيسية</a>
+        <a href="#" onclick="document.getElementById('start-section').style.display='none'; document.getElementById('quiz-section').style.display='block'; document.getElementById('results-section').style.display='none';">الاختبار</a>
+        <a href="#" onclick="document.getElementById('start-section').style.display='none'; document.getElementById('quiz-section').style.display='none'; document.getElementById('results-section').style.display='block';">النتائج</a>
+    </nav>
+    <div class="container">
+        <!-- قسم التعليمات -->
+        <div id="start-section">
+            <h2>تعليمات الاختبار</h2>
+            <p>هذا اختبار يحتوي على 7 أسئلة. لديك 10 دقائق للإجابة على جميع الأسئلة. عندما تكون جاهزاً، اضغط على زر "بدء الاختبار".</p>
+            <button class="btn" onclick="startQuiz()">بدء الاختبار</button>
+        </div>
+        
+        <!-- قسم الاختبار -->
+        <div id="quiz-section" class="hidden">
+            <div class="timer" id="timer">الوقت المتبقي: 10:00</div>
+            <form id="quiz-form">
+                <!-- الأسئلة -->
+                <div class="question">
+                    <h3>سؤال 1: ما هو قانون مساحة المربع؟</h3>
+                    <label><input type="radio" name="q1" value="a"> A = a²</label><br>
+                    <label><input type="radio" name="q1" value="b"> A = 4a</label><br>
+                    <label><input type="radio" name="q1" value="c"> A = 2l × w</label>
+                </div>
+                <div class="question">
+                    <h3>سؤال 2: ما هو قانون مساحة المستطيل؟</h3>
+                    <label><input type="radio" name="q2" value="a"> A = a²</label><br>
+                    <label><input type="radio" name="q2" value="b"> A = l × w</label><br>
+                    <label><input type="radio" name="q2" value="c"> A = 2(l + w)</label>
+                </div>
+                <div class="question">
+                    <h3>سؤال 3: ما هو قانون محيط المثلث؟</h3>
+                    <label><input type="radio" name="q3" value="a"> P = a + b + c</label><br>
+                    <label><input type="radio" name="q3" value="b"> P = a²</label><br>
+                    <label><input type="radio" name="q3" value="c"> P = 2(a + b)</label>
+                </div>
+                <div class="question">
+                    <h3>سؤال 4: ما هو قانون مساحة المثلث؟</h3>
+                    <label><input type="radio" name="q4" value="a"> A = a²</label><br>
+                    <label><input type="radio" name="q4" value="b"> A = 0.5 × b × h</label><br>
+                    <label><input type="radio" name="q4" value="c"> A = l × w</label>
+                </div>
+                <div class="question">
+                    <h3>سؤال 5: ما هو قانون محيط المستطيل؟</h3>
+                    <label><input type="radio" name="q5" value="a"> P = l × w</label><br>
+                    <label><input type="radio" name="q5" value="b"> P = 2(l + w)</label><br>
+                    <label><input type="radio" name="q5" value="c"> P = a²</label>
+                </div>
+                <div class="question">
+                    <h3>سؤال 6: إذا كانت مساحة المربع 64 سم²، ما هو طول كل ضلع؟</h3>
+                    <label><input type="radio" name="q6" value="a"> 8 سم</label><br>
+                    <label><input type="radio" name="q6" value="b"> 16 سم</label><br>
+                    <label><input type="radio" name="q6" value="c"> 4 سم</label>
+                </div>
+                <div class="question">
+                    <h3>سؤال 7: إذا كان طول المستطيل 12 سم وعرضه 5 سم، ما هي مساحته؟</h3>
+                    <label><input type="radio" name="q7" value="a"> 60 سم²</label><br>
+                    <label><input type="radio" name="q7" value="b"> 17 سم²</label><br>
+                    <label><input type="radio" name="q7" value="c"> 55 سم²</label>
+                </div>
+
+                <div class="controls">
+                    <button type="submit" class="btn">إرسال</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- قسم النتائج -->
+        <div id="results-section" class="hidden">
+            <h2>نتائج الاختبار</h2>
+            <p id="score"></p>
+            <p id="feedback"></p>
+        </div>
+</body>
+</html>
+
+
