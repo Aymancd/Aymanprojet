@@ -1,3 +1,3 @@
 مرحبا بكم في صفحتي !
 للدخول على موقع التحقق من القسمة
-<a href="google.com">اضغط هنا!</a>
+<a href="https://aymancd.github.io/Aymanprojet/index3.html">اضغط هنا!</a>
